@@ -4,7 +4,8 @@
 
 import tkinter as tk
 from tkinter import ttk
-from tkinter import *box
+from tkinter import *
+from tkinter import messagebox
 import pymysql
 from PIL import Image, ImageTk
 
