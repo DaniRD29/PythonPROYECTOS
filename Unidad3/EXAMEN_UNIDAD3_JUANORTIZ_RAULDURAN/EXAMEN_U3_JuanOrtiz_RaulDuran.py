@@ -65,13 +65,13 @@ def validar_busqueda():
 
 def validacion_de_login1():
     if user_verify.get()=="Usuario" or contra_verify.get()=="Contraseña":
-        messagebox.showinfo(title="Aviso", message="Algun campo esta vacio, vuelva a intentar")
+        messagebox.showerror(title="Aviso", message="Algún campo sigue vacío, vuelva a intentar")
     else:
         ValidacionDatos()
 
 def validacion_de_login2():
     if user_entry.get()=="Usuario" or contra_entry.get()=="Contraseña":
-        messagebox.showinfo(title="Aviso", message="Algun campo esta vacio, vuelva a intentar")
+        messagebox.showerror(title="Aviso", message="Algún campo sigue vacío, vuelva a intentar")
     else:
         IngresarDatos()
 
@@ -91,10 +91,10 @@ def IngresarDatos():
     try:
         fcursor.execute(sql)
         db.commit()
-        ventana_registro.destroy()
+        des4()
     except:
         db.rollback()
-        messagebox.showinfo(
+        messagebox.showerror(
             message="dou! No se pudo realizar el registro", title="AVISO DE REGISTRO")
     db.close()
 
@@ -113,9 +113,10 @@ def ValidacionDatos():
                     user_verify.get()+"' and contra='"+contra_verify.get()+"'")
 
     if (fcursor.fetchall()):
+        vn3.withdraw()
         menu_emp()
     else:
-        messagebox.showinfo(title="INICIO DE SESION INCORRECTA",
+        messagebox.showerror(title="INICIO DE SESION INCORRECTA",
                             message="EL USUARIO Y CONTRASENA NO SON CORRECTAS :/")
 
     db.close()
@@ -141,7 +142,7 @@ def tomarpedido():
         recibo()
     except:
         db.rollback()
-        messagebox.showinfo(
+        messagebox.showerror(
             message="dou! No se pudo realizar el registro", title="AVISO DE REGISTRO")
         return
     db.close()
@@ -190,7 +191,6 @@ def actualizar_tabla():
         lista_pedidos.insert("", 0, text=i[0], values=(
             i[1], i[2], i[3], i[4], i[5]))
 
-
 def eliminar_elemento():
 
     db = pymysql.connect(
@@ -205,14 +205,14 @@ def eliminar_elemento():
     except IndexError as e:
         # mensaje de error y return para validar que se selecionen los datos
         messagebox.showerror(
-            "AVISO", "PORFAVOR PRIMERO SELECCIONA UN ELEMENTO EN LA TABLA")
+            "AVISO", "POR FAVOR, PRIMERO SELECCIONA UN ELEMENTO DE LA TABLA")
         return
 
     # aqui uso DELETE FROM para eliminar datos, todo esto se aplica de misma forma a los demas CRUD
     sql = "DELETE FROM pedidos WHERE id = '{0}'".format(lista_pedidos.item(lista_pedidos.selection())['text'])
 
     preg = messagebox.askquestion(
-        message="¿ESTA SEGURO DE QUERER ELIMINAR ESTE ELEMENTO?", title="AVISO")
+        message="¿ESTÁS SEGURO DE QUERER ELIMINAR ESTE ELEMENTO?", title="AVISO")
     if preg == 'yes':
         cursor = db.cursor()
         cursor.execute(sql)
@@ -238,7 +238,6 @@ def prueba ():
     print(estado_t)
     print(precio_t)
 
-
 def modificar_ped ():
 
     global iid_mod
@@ -248,15 +247,12 @@ def modificar_ped ():
     except IndexError as e:
         # mensaje de error y return para validar que se selecionen los datos
         messagebox.showerror(
-            "AVISO", "PORFAVOR PRIMERO SELECCIONA UN ELEMENTO EN LA TABLA")
+            "AVISO", "POR FAVOR, PRIMERO SELECCIONA UN ELEMENTO DE LA TABLA")
         return
     
     iid_mod=lista_pedidos.item(lista_pedidos.selection())['text']
     
     ventana_modificar()
-
-
-
     
 def modificar_ped2():
 
@@ -271,7 +267,7 @@ def modificar_ped2():
     sql = "UPDATE pedidos SET tort = '{0}', carn = '{1}', sals = '{2}', cantida = '{3}', complemen = '{4}' WHERE id = '{5}'".format( tortilla_mod.get(), carne_mod.get(), salsas_mod.get(), cantidad_mod.get(), complemento_mod.get(), iid_mod)
     
     preg = messagebox.askquestion(
-        message="¿ESTA SEGURO DE QUERER MODIFICAR ESTE ELEMENTO?", title="AVISO")
+        message="¿ESTÁS SEGURO DE QUERER MODIFICAR ESTE ELEMENTO?", title="AVISO")
 
     if preg == 'yes':
         cursor = db.cursor()
@@ -307,7 +303,7 @@ def buscar_ped():
        for i in datos:
          lista_pedidos.insert("", 0, text=i[0], values=(i[1], i[2], i[3], i[4], i[5]))
     except:
-       messagebox.showinfo(title="ERROR", message="Dato erroneo ingresado, vuelva a intentar")
+       messagebox.showerror(title="ERROR", message="Dato erroneo ingresado, vuelva a intentar")
        return
    
 #-------Buscar Tipos de carne--------
@@ -336,7 +332,7 @@ def buscar_T():
        for i in datos:
          lista_pedidos.insert("", 0, text=i[0], values=(i[1], i[2], i[3], i[4], i[5]))
     except:
-       messagebox.showinfo(title="ERROR", message="Dato erroneo ingresado, vuelva a intentar")
+       messagebox.showerror(title="ERROR", message="Dato erroneo ingresado, vuelva a intentar")
        return
 
 #*************************CLASES PARA EL RECIBO DEL CLIENTE Y USOS PARA DISENO*****************************
@@ -369,15 +365,6 @@ class cobrar(calculos):
             self.orden = 16
 
         return ("Importe: $ {} pesos".format(self.precio*self.orden))
-    
-
-def limite_user(a):
-    if len(a.get()) > 0:
-        a.set(a.get()[:12])
-
-def limite_contra(b):
-    if len(b.get()) > 0:
-        b.set(b.get()[:12])
 
 
 def bg_user(event):
@@ -416,12 +403,39 @@ def bg_contra2(event):
         contra_entry.insert(0, "Contraseña")
         contra_entry.config(fg='gray78', show=())
 
+def validate_entry2(a, b):
+
+    if len(b) > 12:
+        return False
+    
+    return a.isalpha()
+
+def validate_entry(a, b):
+
+    if len(b) > 12:
+        return False
+    
+    return a.isidentifier()
+
+def validate_entry3(a, b):
+
+    if len(b) > 3:
+        return False
+    
+    return a.isdecimal()
 
 
 # *******************VENTANA DONDE EL USUARIO ELIJE SI REALIZAR EL PEDIDO O ACCEDER COMO EMPLEADO*******************************
 
 
 def venp():
+
+    try:
+        cl.withdraw()
+        vn3.withdraw()
+    except Exception:
+        pass
+
     global ven
     ven = tk.Tk()
     ven.title("TACONTENTO")
@@ -449,6 +463,12 @@ def venp():
 
 
 def eleccion():
+    try:
+        ven.withdraw()
+        vn3.withdraw()
+    except Exception:
+        pass
+
     global cl
     cl = tk.Toplevel(ven)
     cl.title("Pedido")
@@ -465,7 +485,7 @@ def eleccion():
     global complemento
 
     tortilla = ttk.Combobox(cl, state="readonly", values=[
-                            "Maiz", "Harina", "Azul"], font=("calibri light", 15))
+                            "Maíz", "Harina", "Azul"], font=("calibri light", 15))
     tortilla.place(x=150, y=150, width=300, height=30)
 
     carne = ttk.Combobox(cl, state="readonly", values=[
@@ -503,14 +523,54 @@ def eleccion():
         cl, text="Realizar pedido", command=validar, fg="snow", font= ("segoe ui black", 8), bg= "maroon")
     button_pedir.place(x=205, y=425, width=200, height=30)
 
+    cl.protocol("WM_DELETE_WINDOW", des1)
     cl.resizable(0, 0)
     cl.mainloop()
+
+#********************************************CIERRE DE VENTANAS***********************************
+
+def des1 ():
+    try:
+       cl.destroy()
+       ven.deiconify()
+    except Exception:
+        pass
+
+def des2 ():
+    try:
+       vent_recibo.destroy()
+       ven.deiconify()
+    except Exception:
+        pass
+
+def des3 ():
+    try:
+       vn3.destroy()
+       ven.deiconify()
+    except Exception:
+        pass
+
+def des4 ():
+    try:
+       ventana_registro.destroy()
+       vn3.deiconify()
+    except Exception:
+        pass
+
+def des5 ():
+    try:
+       vent_emp.destroy()
+       ven.deiconify()
+    except Exception:
+        pass
+
 
 
 # ***************************************VENTANA DEL RECIBO DEL CLIENTE*************************************
 
 
 def recibo():
+
     global vent_recibo
     global take
 
@@ -536,20 +596,21 @@ def recibo():
 
     vent_recibo.resizable(0, 0)
     cl.destroy()
+    vent_recibo.protocol("WM_DELETE_WINDOW", des2)
     vent_recibo.mainloop()
 
 
 def validar():
     if tortilla.get() == "" or carne.get() == "" or salsas.get() == "" or cantidad.get() == "" or complemento.get() == "":
-        messagebox.showinfo(
-            message="Algun campo sigue vacio, vuelva a intentar", title="Aviso")
+        messagebox.showerror(
+            message="Algún campo sigue vacío, vuelva a intentar", title="Aviso")
     else:
         tomarpedido()
 
 def validar2():
     if tortilla_mod.get() == "" or carne_mod.get() == "" or salsas_mod.get() == "" or cantidad_mod.get() == "" or complemento_mod.get() == "":
-        messagebox.showinfo(
-            message="Algun campo sigue vacio, vuelva a intentar", title="Aviso")
+        messagebox.showerror(
+            message="Algún campo sigue vacío, vuelva a intentar", title="Aviso")
     else:
         modificar_ped2()
 # ***********************************VENTANAS DEL EMPLEADO*******************************************************
@@ -557,9 +618,18 @@ def validar2():
 
 
 def bottpress2():
+
+    try:
+        ven.withdraw()
+        ventana_registro.withdraw()
+        cl.withdraw()
+    except Exception:
+        pass
+
+
     global vn3
     vn3 = tk.Toplevel(ven)
-    vn3.title("Bienvenido, inicie sesion")
+    vn3.title("Bienvenido, inicie sesión")
     vn3.geometry("500x350")
     vn3.iconbitmap("EXAMEN_UNIDAD3_JUANORTIZ_RAULDURAN/favicon.ico")
 
@@ -572,17 +642,15 @@ def bottpress2():
     user_valid=StringVar()
     contra_valid=StringVar()
 
-    user_verify = tk.Entry(vn3, bg="ghost white", textvariable=user_valid, justify="center", fg="gray78")
+    user_verify = tk.Entry(vn3, bg="ghost white", validate="key", validatecommand=(vn3.register(validate_entry2), "%S", "%P"), textvariable=user_valid, justify="center", fg="gray78")
     user_verify.insert(0,'Usuario')
     user_verify.bind("<FocusIn>", bg_user)
     user_verify.bind("<FocusOut>", bg_user)
-    contra_verify = tk.Entry(vn3, bg="ghost white", textvariable=contra_valid, justify="center", fg="gray78")
+    contra_verify = tk.Entry(vn3, bg="ghost white", validate="key", validatecommand=(vn3.register(validate_entry), "%S", "%P"), textvariable=contra_valid, justify="center", fg="gray78")
     contra_verify.insert(0,'Contraseña')
     contra_verify.bind("<FocusIn>", bg_contra)
     contra_verify.bind("<FocusOut>", bg_contra)
-    
-    user_valid.trace("w", lambda *args: limite_user(user_valid))
-    contra_valid.trace("w", lambda *args: limite_user(contra_valid))
+
 
     # Mas botones con diseño
     Label(vn3, bg="ghost white", text="Bienvenido", font=(
@@ -595,20 +663,30 @@ def bottpress2():
                     fg="snow", bg="maroon", command=registrar)
     buton3.place(width=180, height=25, x=35, y=220)
 
-    buton_ini = Button(vn3, text="INICIAR SESION", font=("segoe ui black", 8),
+    buton_ini = Button(vn3, text="INICIAR SESIÓN", font=("segoe ui black", 8),
                        fg="snow", bg="maroon", command=validacion_de_login1)
     buton_ini.place(width=180, height=25, x=35, y=180)
 
     boton_close = tk.Button(vn3, text="Cerrar ventana", font=(
-        "segoe ui black", 8), fg="grey1", bg="gold", command=vn3.destroy)
+        "segoe ui black", 8), fg="grey1", bg="gold", command=des3)
     boton_close.place(width=180, height=20, x=35, y=260)
     vn3.resizable(0, 0)
+    vn3.protocol("WM_DELETE_WINDOW", des3)
     vn3.mainloop()
 
 # *********************************MENU DEL EMPLEADO PARA REGISTRARSE************************************************
 
 
 def registrar():
+
+    try:
+        ven.withdraw()
+        vn3.withdraw()
+        vent_emp.withdraw()
+        cl.withdraw()
+    except Exception:
+        pass
+
     global ventana_registro
     ventana_registro = tk.Toplevel(ven)
     ventana_registro.title("Registro de empleado")
@@ -629,19 +707,16 @@ def registrar():
     user_valid=StringVar()
     contra_valid=StringVar()
 
-    user_entry = Entry(ventana_registro, textvariable=user_valid, fg="gray78", justify="center")
+    user_entry = Entry(ventana_registro, validate="key", validatecommand=(ventana_registro.register(validate_entry2), "%S", "%P"), textvariable=user_valid, fg="gray78", justify="center")
     user_entry.insert(0, 'Usuario')
     user_entry.bind("<FocusIn>", bg_user2)
     user_entry.bind("<FocusOut>", bg_user2)
     user_entry.place(x=35, y=100, width=180, height=25)
-    contra_entry = Entry(ventana_registro, textvariable=contra_valid, fg="gray78", justify="center")
+    contra_entry = Entry(ventana_registro, validate="key", validatecommand=(ventana_registro.register(validate_entry), "%S", "%P"), textvariable=contra_valid, fg="gray78", justify="center")
     contra_entry.insert(0, 'Contraseña')
     contra_entry.bind("<FocusIn>", bg_contra2)
     contra_entry.bind("<FocusOut>", bg_contra2)
     contra_entry.place(x=35, y=140, width=180, height=25)
-
-    user_valid.trace("w", lambda *args: limite_user(user_valid))
-    contra_valid.trace("w", lambda *args: limite_user(contra_valid))
 
     Label(ventana_registro, bg="ghost white", text="Registrate", font=(
         "Segoe ui black", 16), fg="maroon").place(x=70, y=50)
@@ -651,21 +726,33 @@ def registrar():
     boton_registrar.place(width=180, height=25, x=35, y=180)
 
     boton_close = tk.Button(ventana_registro, text="Cerrar ventana", font=(
-        "segoe ui black", 8), fg="grey1", bg="gold", command=ventana_registro.destroy)
+        "segoe ui black", 8), fg="grey1", bg="gold", command=des4)
     boton_close.place(width=180, height=20, x=35, y=240)
 
     ventana_registro.resizable(0, 0)
+    ventana_registro.protocol("WM_DELETE_WINDOW", des4)
     ventana_registro.mainloop()
 
 # ************************VENTANA DE MENU PARA EL EMPLEADO, DONDE SE VISUALIZAN LOS PEDIDOS******************
 
 
 def menu_emp():
+
+    try:
+        ventana_registro.withdraw()
+        vn3.withdraw()
+        ven.withdraw()
+    except Exception:
+        pass
+
     global vent_emp
     vent_emp = tk.Toplevel(ven)
-    vent_emp.title("Menu para empleados y pedidos")
+    vent_emp.title("Menú para empleados y pedidos")
     vent_emp.geometry("1280x700")
 
+    vent_emp.iconbitmap(
+        "EXAMEN_UNIDAD3_JUANORTIZ_RAULDURAN/favicon.ico")
+    
     global tabla_pedidos
     global lista_pedidos
     global busqueda
@@ -708,12 +795,12 @@ def menu_emp():
 
     consultar_pedido()
 
-    
-    busqueda_limit=int()
+    busqueda_limit=StringVar()
 
-    busqueda=tk.Entry(vent_emp, bg="ghost white", font=("corbel light", 12), textvariable=busqueda_limit)
+    busqueda=tk.Entry(vent_emp, bg="ghost white", validate="key", validatecommand=(vent_emp.register(validate_entry3), "%S", "%P"), font=("corbel light", 12), textvariable=busqueda_limit)
     busqueda.place(x=150, y=40, width=150, height=20)
     busqueda.bind("<Button-1>", lambda e: busqueda.delete(0, END))
+
     
     button_del = Button(
         vent_emp, text="ELIMINAR PEDIDO", width="20", height="2", bg="maroon", fg="snow", font=("segoe ui black", 10), command=eliminar_elemento)
@@ -740,6 +827,7 @@ def menu_emp():
     lista_pedidos.config(yscrollcommand=move_up.set)
 
     vent_emp.resizable(0, 0)
+    vent_emp.protocol("WM_DELETE_WINDOW", des5)
     vent_emp.mainloop()
 
 #*******************************VENTANA PARA EDITAR LOS VALORES*******************************************
@@ -763,7 +851,7 @@ def ventana_modificar():
 
 
     tortilla_mod = ttk.Combobox(ven_modify, state="readonly", values=[
-                            "Maiz", "Harina", "Azul"], font=("calibri light", 15))
+                            "Maíz", "Harina", "Azul"], font=("calibri light", 15))
     tortilla_mod.place(x=150, y=150, width=300, height=30)
 
     carne_mod = ttk.Combobox(ven_modify, state="readonly", values=[
