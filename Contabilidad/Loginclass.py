@@ -8,8 +8,9 @@ from PIL import Image, ImageTk
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("dark-blue")
 
-class log:
+class log(CTk):
     def __init__(self,ven):
+        super().__init__()
         self.vp=ven
         self.vp.geometry('700x500')
         self.vp.config(bg="black")
@@ -87,7 +88,7 @@ class log:
 
         register_button = tk.Button(frame_botones, text="REGISTRARSE", 
                             height=2, width=15,bg="cyan3", fg="black", font=("Arial", 12, "bold"),
-                            command=register)
+                            command=self.Registro)
         register_button.grid(row=3, column=2, padx=5, pady=8)
 
 #NumEmp =customtkinter
@@ -102,7 +103,7 @@ class log:
              if len(verify_m.get())>0:
               verify_m.set(verify_m.get()[:10])
         
-        def register(self,vn):
+        def registrov(self):
                 ven.withdraw()
                 self.v2=vn
                 vn=CTk()
@@ -112,7 +113,11 @@ class log:
                 self.v2.resizable(False,False)
                 
                 vn.mainloop()
-
+class Registro(tk.Toplevel):
+       def __init__(self, master):
+        self.master = master
+        super().__init__(master)
+         
 if __name__ =="__main__":
     ven=CTk()
     app=log(ven)

@@ -6,12 +6,12 @@ class CircleButton(CTkButton):
     def __init__(self, master=None, text='',command=None):
         super().__init__(master=master, text=text, command=command)
         self.configure(width=50, heigth=70, corner_radius=20,
-                       haver__color=('#cccccc', '#333333'),
+                       hover__color=('#cccccc', '#333333'),
                        fg_color=('#7f5af0', '#7f5af0'),
                        text_font=('Arial',16))
         self.grid(padx=5,pady=5,sticky='nsew')
         
-def toggle_mode():
+"""def toggle_mode():
     global mode
     if mode=='ligth':
         mode='Dark'
@@ -20,7 +20,7 @@ def toggle_mode():
     else:
         mode='dark'
         #ct.set_appearence_mode('Ligth')
-        ven.config(bg='white')
+        ven.config(bg='white')"""
     
 ven=CTk()
 ven.config(bg="black")
@@ -32,7 +32,7 @@ mode='Dark'
 expression=StringVar()
 
 button_mode=CTkButton(ven,text='',
-                      haver_color=('white', 'black'),
+                      hover_color=('white', 'black'),
                       bg_color=('white', 'black'), width=50, heigth=50,
                       command=toggle_mode)
 button_mode.grid(row=0,column=0)
