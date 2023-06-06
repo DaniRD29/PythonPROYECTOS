@@ -702,13 +702,13 @@ def inicio():
     if not resultado:
         messagebox.showinfo(message="Error usuario y/o contraseña")
         return
-    
+
+
     elif resultado[1] == usuario and resultado[2] == contraseña:
         lg.withdraw()
         a = VentanaPrincipal()
         a.mainloop()
         ta.close()
-        
 
 
 def registros():
